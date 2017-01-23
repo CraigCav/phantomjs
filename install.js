@@ -286,7 +286,13 @@ function extractDownload(filePath) {
 
   } else {
     console.log('Extracting tar contents (via spawned process)')
-    cp.execFile('tar', ['jxf', path.resolve(filePath)], options, function (err) {
+    var args = [path.resolve(filePath)];
+    if(filePath.includes('bz2')) {
+      args.unshift('jxf');
+    } else {
+      args.unshift('xvf');
+    }
+    cp.execFile('tar', args, options, function (err) {
       if (err) {
         console.error('Error extracting archive')
         deferred.reject(err)
